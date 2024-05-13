@@ -8,7 +8,7 @@ public class Association extends User{
     private String cause;
     private ArrayList<String> cities=new ArrayList<>();
 
-    public Association(String name, String cause, int PhoneNumber, String password) {
+    public Association(String name, String cause, String PhoneNumber, String password) {
         super(PhoneNumber, password);
         this.name = name;
         this.cause = cause;

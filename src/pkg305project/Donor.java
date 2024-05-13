@@ -8,7 +8,7 @@ public class Donor extends User{
     private String city;
     private String street;
 
-    public Donor(String Fname, String Lname, String city, String street, int PhoneNumber, String password) {
+    public Donor(String Fname, String Lname, String city, String street, String PhoneNumber, String password) {
         super(PhoneNumber, password);
         this.Fname = Fname;
         this.Lname = Lname;

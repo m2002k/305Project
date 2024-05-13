@@ -18,7 +18,22 @@ public class Client {
              ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
              ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
              Scanner scanner = new Scanner(System.in)) {
-
+            char login;
+            String phone;
+            
+            while (true) {
+                 System.out.print("Enter L for log-in and C to Create Account:");
+                 login = scanner.nextLine().charAt(0);
+             if ((login=='c'||login=='C')||(login=='l'||login=='L')){
+            break;}
+                } 
+        
+             while (true) {
+                 System.out.print("Enter Phone Number:");
+                 phone =scanner.nextLine();
+                         if (isValidPhoneNumber(phone)){
+             break;}
+           }
 
             oos.flush();
             oos.close();
@@ -62,19 +77,25 @@ public static boolean isPasswordValid(String password) {
         return hasNumber && hasUpperCase && hasLowerCase;
     }
 
-public static boolean isValidPhoneNumber(String phoneNumber) {
+public static boolean isValidPhoneNumber(String input) {
         try {
-            if (phoneNumber == null || phoneNumber.length() != 10) {
-                throw new IllegalArgumentException("Phone number must be 10 digits long.");
+            if (input.length() != 10) {
+                System.out.println("Input must be 10 characters long.");
+                throw new IllegalArgumentException("Input must be 10 characters long.");
             }
-            if (!phoneNumber.startsWith("05")) {
-                throw new IllegalArgumentException("Phone number must start with '05'.");
+            if (!input.startsWith("05")) {
+                System.out.println("Input must start with '05'.");
+                throw new IllegalArgumentException("Input must start with '05'.");
             }
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-        return true;
-    }}
+            for (char c : input.toCharArray()) {
+                if (!Character.isDigit(c)) {
+                  System.out.println("Input must contain only digits.");
+                    throw new IllegalArgumentException("Input must contain only digits.");
+                }
+            }
+            Long.parseLong(input); // Try parsing as a long to ensure all characters are digits
+            return true;} catch (IllegalArgumentException e) {
+            return false;}}
+}
 
 

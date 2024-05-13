@@ -8,19 +8,19 @@ import java.util.Date;
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private int PhoneNumber;
+    private String PhoneNumber;
     protected String password;
 
-    public User(int PhoneNumber, String password) {
+    public User(String PhoneNumber, String password) {
         this.PhoneNumber = PhoneNumber;
         this.password = password;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return PhoneNumber;
     }
 
-    public void setPhoneNumber(int PhoneNumber) {
+    public void setPhoneNumber(String PhoneNumber) {
         this.PhoneNumber = PhoneNumber;
     }
 
@@ -31,4 +31,5 @@ public class User implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }
