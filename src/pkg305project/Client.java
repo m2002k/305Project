@@ -53,7 +53,6 @@ public class Client {
         String Fname;
         String Lname;
         String city = null;
-        String street;
         while (true) {
             while (true) {
                 System.out.print("Enter Phone Number:");
@@ -104,7 +103,7 @@ public class Client {
             System.out.println("name is too long:");
         }
 
-       while (true) {
+        while (true) {
             System.out.println("Choose city name:");
             System.out.println("1-Makkah");
             System.out.println("2-Jeddah");
@@ -133,7 +132,8 @@ public class Client {
                 break;
             }
         }
-       donor =new Donor(Fname,Lname,city,phone,Passeword);
+        donor = new Donor(Fname, Lname, city, phone, Passeword);
+        oos.writeObject(donor);
     }
 
     public static void LingIn(ObjectOutputStream oos, ObjectInputStream ois, Scanner scanner) throws IOException, ClassNotFoundException {
@@ -149,19 +149,26 @@ public class Client {
             }
 
             oos.writeObject(phone);
-            boolean found = (boolean) ois.readObject();;
+            boolean found = (boolean) ois.readObject();
             if (found) {
                 break;
             }
             System.out.println("Phone not found:");
         }
-
+        String PWord=(String) ois.readObject();
+        while (true) {
         while (true) {
             System.out.print("Enter Passeword:");
             Passeword = scanner.nextLine();
             if (isPasswordValid(Passeword)) {
                 break;
             }
+        }
+        if (PWord.equals(Passeword)){
+             oos.writeObject(true);
+             break;
+        }
+          System.out.println("Passeword is wrong:");
         }
 
     }

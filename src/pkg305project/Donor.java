@@ -55,4 +55,9 @@ public class Donor extends User{
         this.password = password;
     }
 
+    @Override
+    public String toString() {
+        return "Donor {Phone Number +" +super.getPhoneNumber()+ "Fname=" + Fname + 
+                ", Lname=" + Lname + ", city=" + city + ", street=" + street + '}';
+    }
 }

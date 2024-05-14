@@ -42,6 +42,7 @@ public class Server {
                 try (
                         ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream()); ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream()); PrintWriter writer = new PrintWriter(new FileWriter("users.txt", true))) {
 
+                    Donor donor;
                     boolean teamp = (boolean) ois.readObject();
                     if (teamp) {
 
@@ -53,33 +54,54 @@ public class Server {
                             if (rs.next()) {
                                 found = true;
                                 oos.writeObject(found);
-                                break;
                             } else {
                                 found = false;
                                 oos.writeObject(found);
+                                break;
                             }
                         }
+                        donor = (Donor) ois.readObject();
+                        String in ="INSERT INTO donor (phone_number,Fname,Lname,city,street,PWord) "
+                                + "VALUES('"+donor.getPhoneNumber() +"','"+donor.getFname() +"','"+ donor.getLname()+
+                                "','"+donor.getCity()+"','"+donor.getStreet()+"','"+donor.getPassword()+"')";
+                        statement.executeUpdate(in);
 
                     } else {
                         while (true) {
+                        String phone;
+                        String Pword;
+                        ResultSet rs;
+                        while (true) {
                             boolean found;
-                            String phone = (String) ois.readObject();
+                            phone = (String) ois.readObject();
                             String s1 = "select * from donor where phone_number = " + phone;
-                            ResultSet rs = statement.executeQuery(s1);
+                            rs = statement.executeQuery(s1);
                             if (rs.next()) {
                                 found = true;
                                 oos.writeObject(found);
+                                Pword =rs.getString("PWord");
+                                Pword=Pword.replaceAll("\\s+$", "");//remove extar space
+                                oos.writeObject(Pword);
                                 break;
                             } else {
                                 found = false;
                                 oos.writeObject(found);
                             }
+                        }//collect donor info form database + remove extar spaces
+                         String Fname=rs.getString("Fname").replaceAll("\\s+$", "");
+                         String Lname=rs.getString("Lname").replaceAll("\\s+$", "");
+                         String city =rs.getString("city").replaceAll("\\s+$", "");
+                         
+                         donor = new Donor(Fname, Lname, city, phone, Pword);
+                         teamp = (boolean) ois.readObject();
+                         if (teamp){
+                             break;
+                         }
                         }
-
                     }
 
                     synchronized (Server.class) {
-                        writer.println("");
+                        writer.println(donor);
                         writer.flush();
                     }
                 } catch (IOException | ClassNotFoundException e) {

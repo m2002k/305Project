@@ -1,9 +1,1 @@
-0553693435
-0553693435
-0553693435
-
-
-
-
-
-
+Donor {Phone Number 0553693435, Fname=Mohammed, Lname=Serajuldeen, city=Jeddah, street=null}
