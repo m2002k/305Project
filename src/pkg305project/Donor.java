@@ -6,14 +6,13 @@ public class Donor extends User{
     private String Fname;
     private String Lname;
     private String city;
-    private String street;
+    private String street= null;
 
-    public Donor(String Fname, String Lname, String city, String street, String PhoneNumber, String password) {
+    public Donor(String Fname, String Lname, String city, String PhoneNumber, String password) {
         super(PhoneNumber, password);
         this.Fname = Fname;
         this.Lname = Lname;
         this.city = city;
-        this.street = street;
     }
 
     public String getFname() {
