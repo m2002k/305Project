@@ -19,21 +19,17 @@ public class Client {
              ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
              Scanner scanner = new Scanner(System.in)) {
             char login;
-            String phone;
             
             while (true) {
                  System.out.print("Enter L for log-in and C to Create Account:");
                  login = scanner.nextLine().charAt(0);
              if ((login=='c'||login=='C')||(login=='l'||login=='L')){
-            break;}
-                } 
-        
-             while (true) {
-                 System.out.print("Enter Phone Number:");
-                 phone =scanner.nextLine();
-                         if (isValidPhoneNumber(phone)){
-             break;}
-           }
+            break;}} 
+            
+            if(login=='c'||login=='C'){
+                 CreateAccount(oos,ois,scanner);}
+            else {
+                 LingIn(oos,ois,scanner);}
 
             oos.flush();
             oos.close();
@@ -45,6 +41,33 @@ public class Client {
             e.printStackTrace();}
     }
     
+public static User CreateAccount( ObjectOutputStream oos,ObjectInputStream ois,Scanner scanner){
+    String phone;
+    while (true) {
+                 System.out.print("Enter Phone Number:");
+                 phone =scanner.nextLine();
+                 if (isValidPhoneNumber(phone)){
+             break;}}
+    
+        return null;}
+
+public static User LingIn( ObjectOutputStream oos,ObjectInputStream ois,Scanner scanner){
+    String phone;
+    String Passeword;
+    while (true) {
+                 System.out.print("Enter Phone Number:");
+                 phone =scanner.nextLine();
+                 if (isValidPhoneNumber(phone)){
+             break;}}
+    
+    while (true) {
+                 System.out.print("Enter Passeword:");
+                 Passeword =scanner.nextLine();
+                 if (isPasswordValid( Passeword)){
+             break;}}
+    
+        return null;}
+    
 public static boolean isPasswordValid(String password) {
         boolean hasNumber = false;
         boolean hasUpperCase = false;
@@ -52,30 +75,29 @@ public static boolean isPasswordValid(String password) {
 
         try {
             if (password == null) {
-                throw new IllegalArgumentException("Password cannot be null.");
+                throw new IllegalArgumentException("Password cannot be null.");} 
+            else if(password.length() > 12 || password.length()< 8) {
+                throw new IllegalArgumentException("Password must be between 8-12 characters long");
             }
-
+            
             for (char c : password.toCharArray()) {
                 if (Character.isDigit(c)) {
                     hasNumber = true;
                 } else if (Character.isUpperCase(c)) {
                     hasUpperCase = true;
                 } else if (Character.isLowerCase(c)) {
-                    hasLowerCase = true;
-                }
-
+                    hasLowerCase = true;}
+                
                 // Optimization: If all conditions are already met, exit the loop
                 if (hasNumber && hasUpperCase && hasLowerCase) {
-                    break;
-                }
-            }
+                    break;}}
+                if (!(hasNumber && hasUpperCase && hasLowerCase)){
+                System.out.println("Password must has Number , UpperCase ,LowerCase");}
+                
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            return false;
-        }
-
-        return hasNumber && hasUpperCase && hasLowerCase;
-    }
+            return false;}
+        return hasNumber && hasUpperCase && hasLowerCase;}
 
 public static boolean isValidPhoneNumber(String input) {
         try {
