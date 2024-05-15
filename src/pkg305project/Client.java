@@ -76,7 +76,7 @@ public class Client {
             typeOptions.add("Jacket");
             typeOptions.add("Pants");
             typeOptions.add("shows");
-            typeOptions.add("hat");
+            typeOptions.add("hat");;
 
             while (true) {
                 System.out.println("Please choose the type of chothes you want to donate:");
@@ -86,7 +86,7 @@ public class Client {
 
                 try {
                     int choice = scanner.nextInt();
-                    if (choice < 1 || choice > associations.size()) {
+                    if (choice < 1 || choice > typeOptions.size()) {
                         System.out.println("Invalid choice. Please run the program again and choose a valid number.");
                     } else {
                         // Display the chosen item
@@ -103,7 +103,7 @@ public class Client {
                     break;
                 }
             }
-            scanner.nextLine();// Clear the invalid input
+            scanner.nextLine();//
             
             String size;
 
