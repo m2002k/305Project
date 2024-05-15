@@ -76,7 +76,7 @@ public class Client {
             typeOptions.add("Jacket");
             typeOptions.add("Pants");
             typeOptions.add("shows");
-            typeOptions.add("hat");;
+            typeOptions.add("hat");
 
             while (true) {
                 System.out.println("Please choose the type of chothes you want to donate:");
