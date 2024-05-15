@@ -57,7 +57,7 @@ public class Donor extends User{
 
     @Override
     public String toString() {
-        return "Donor {Phone Number +" +super.getPhoneNumber()+ "Fname=" + Fname + 
+        return "Donor {Phone Number " +super.getPhoneNumber()+ " ,Fname=" + Fname + 
                 ", Lname=" + Lname + ", city=" + city + ", street=" + street + '}';
     }
 }
