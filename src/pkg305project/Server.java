@@ -4,6 +4,8 @@ import java.sql.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Server {
@@ -41,7 +43,7 @@ public class Server {
             try (java.sql.Connection connection = DriverManager.getConnection(database); java.sql.Statement statement = connection.createStatement();) {
                 try (
                         ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream()); ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream()); PrintWriter writer = new PrintWriter(new FileWriter("users.txt", true))) {
-                        
+
                     Donor donor;
                     boolean teamp = (boolean) ois.readObject();
                     if (teamp) {
@@ -95,10 +97,60 @@ public class Server {
                             donor = new Donor(Fname, Lname, city, phone, Pword);
                             teamp = (boolean) ois.readObject();
                             if (teamp) {
+                                rs.close();
                                 break;
                             }
                         }
                     }
+                    String s1 = "select * from cities where city = ?";
+                    PreparedStatement pstmt1 = connection.prepareStatement(s1);
+                    pstmt1.setString(1, donor.getCity());
+                    ResultSet rs1 = pstmt1.executeQuery();
+                    ArrayList<Association> associations = new ArrayList<>();
+
+                    try {
+                        while (rs1.next()) {
+                            String association = rs1.getString("association");
+                            String s2 = "select * from Association where Phone_number = ?";
+                            PreparedStatement pstmt2 = connection.prepareStatement(s2);
+                            pstmt2.setString(1, association);
+                            ResultSet rs2 = pstmt2.executeQuery();
+
+                            try {
+                                if (rs2.next()) {
+                                    String name = rs2.getString("name").replaceAll("\\s+$", "");
+                                    String cause = rs2.getString("cause").replaceAll("\\s+$", "");
+                                    String password = rs2.getString("PWord").replaceAll("\\s+$", "");
+                                    Association as = new Association(name, cause, association, password);
+                                    as.addCity(donor.getCity());
+                                    associations.add(as);
+                                }
+                            } finally {
+                                rs2.close();
+                                pstmt2.close();
+                            }
+                        }
+                    } finally {
+                        rs1.close();
+                        pstmt1.close();
+                    }
+                    oos.writeObject(associations);
+
+                    int id = generateUniqueId(connection);
+
+                    oos.writeObject(id);
+                    
+
+                    clothing clothing = (clothing) ois.readObject();
+                    String in = "INSERT INTO clothing (id,Type,Size) "
+                            + "VALUES('" + clothing.getID() + "','" + clothing.getType() + "','" + clothing.getSize() + "')";
+                    statement.executeUpdate(in);
+
+                    String association = (String)ois.readObject();
+                    
+                    in = "INSERT INTO donate (donor,association,clothing) "
+                            + "VALUES('" + donor.getPhoneNumber() + "','" + association + "','" + clothing.getID() + "')";
+                    statement.executeUpdate(in);
 
                     synchronized (Server.class) {
                         writer.println(donor);
@@ -112,5 +164,31 @@ public class Server {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private static int generateUniqueId(Connection connection) throws SQLException {
+        Random random = new Random();
+        int Id;
+        boolean isUnique;
+
+        do {
+            Id = random.nextInt(1000000);
+            isUnique = isIdUnique(connection, Id);
+        } while (!isUnique);
+
+        return Id;
+    }
+
+    private static boolean isIdUnique(Connection connection, int Id) throws SQLException {
+        String query = "SELECT COUNT(*) FROM clothing WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, Id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) == 0;
+                }
+            }
+        }
+        return false;
     }
 }

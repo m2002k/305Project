@@ -1,18 +1,14 @@
 package pkg305project;
 
-public class Clothes {
+import java.io.Serializable;
+
+public class clothing implements Serializable {
     
-    // Class fields
     private int ID;
     private String type;
-    private double size; 
-
-    // Constructor
-    public Clothes (){
-        this(1, "HeadClothes", 1);
-    }
+    private String size; 
     
-    public Clothes(int ID, String type, double size) {
+    public clothing(int ID, String type, String size) {
         this.ID = ID;
         this.type = type;
         this.size = size;
@@ -34,13 +30,13 @@ public class Clothes {
         this.type = type;
     }
 
-    public double getSize() {
+    public String getSize() {
         return size;
     }
 
-    public void setSize(double size) {
+    public void setSize(String size) {
         this.size = size;
     }
-    
+
     
 }

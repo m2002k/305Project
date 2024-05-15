@@ -45,5 +45,10 @@ public class Association extends User{
     public void addCity(String name) {
         this.cities.add(name);
     }
-    
+
+    @Override
+    public String toString() {
+        return "Association{Phone = "+super.getPhoneNumber() + 
+                " ,name=" + name + ", cause=" + cause + ", cities=" + cities + '}';
+    }
 }

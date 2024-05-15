@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -16,7 +17,10 @@ public class Client {
         final String SIP = "localhost";
         final int Server_port = 12345;
 
-        try (Socket socket = new Socket(SIP, Server_port); ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream()); ObjectInputStream ois = new ObjectInputStream(socket.getInputStream()); Scanner scanner = new Scanner(System.in)) {
+        try (Socket socket = new Socket(SIP, Server_port);
+                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+                Scanner scanner = new Scanner(System.in)) {
             char login;
 
             while (true) {
@@ -34,6 +38,87 @@ public class Client {
                 oos.writeObject(false);
                 LingIn(oos, ois, scanner);
             }
+
+            ArrayList<Association> associations = (ArrayList) ois.readObject();
+            Association association = null;
+
+            while (true) {
+                System.out.println("Please choose an association from the list by entering the corresponding number:");
+                for (int i = 0; i < associations.size(); i++) {
+                    System.out.println((i + 1) + ". " + associations.get(i));
+                }
+
+                try {
+                    int choice = scanner.nextInt();
+                    if (choice < 1 || choice > associations.size()) {
+                        System.out.println("Invalid choice. Please run the program again and choose a valid number.");
+                    } else {
+                        // Display the chosen item
+                        association = associations.get(choice - 1);
+                        System.out.println("You chose: " + association);
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Invalid input. Please enter a number.");
+                    scanner.nextLine(); // Clear the invalid input
+                }
+
+                if (association != null) {
+                    break;
+                }
+            }
+            int cothingid = (int) ois.readObject();
+            String ct = null;
+            ArrayList<String> typeOptions = new ArrayList<>();
+            typeOptions.add("Shirt");
+            typeOptions.add("TShirt");
+            typeOptions.add("hoodie");
+            typeOptions.add("Jacket");
+            typeOptions.add("Pants");
+            typeOptions.add("shows");
+            typeOptions.add("hat");;
+
+            while (true) {
+                System.out.println("Please choose the type of chothes you want to donate:");
+                for (int i = 0; i < typeOptions.size(); i++) {
+                    System.out.println((i + 1) + ". " + typeOptions.get(i));
+                }
+
+                try {
+                    int choice = scanner.nextInt();
+                    if (choice < 1 || choice > associations.size()) {
+                        System.out.println("Invalid choice. Please run the program again and choose a valid number.");
+                    } else {
+                        // Display the chosen item
+                        ct = typeOptions.get(choice - 1);
+                        System.out.println("You chose: " + ct);
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Invalid input. Please enter a number.");
+                    scanner.nextLine(); // Clear the invalid input
+                }
+
+                if (ct != null) {
+                    break;
+                }
+            }
+            scanner.nextLine();// Clear the invalid input
+            
+            String size;
+
+            while (true) {
+                System.out.print("Enter the size:");
+                size = scanner.nextLine();
+                if (size.length() <= 25) {
+                    break;
+                }
+                System.out.println("size is too long:");
+            }
+            
+            clothing c =new clothing( cothingid, ct, size);
+            oos.writeObject(c);
+            oos.writeObject(association.getPhoneNumber());
 
             oos.flush();
             oos.close();
@@ -155,20 +240,20 @@ public class Client {
             }
             System.out.println("Phone not found:");
         }
-        String PWord=(String) ois.readObject();
+        String PWord = (String) ois.readObject();
         while (true) {
-        while (true) {
-            System.out.print("Enter Passeword:");
-            Passeword = scanner.nextLine();
-            if (isPasswordValid(Passeword)) {
+            while (true) {
+                System.out.print("Enter Passeword:");
+                Passeword = scanner.nextLine();
+                if (isPasswordValid(Passeword)) {
+                    break;
+                }
+            }
+            if (PWord.equals(Passeword)) {
+                oos.writeObject(true);
                 break;
             }
-        }
-        if (PWord.equals(Passeword)){
-             oos.writeObject(true);
-             break;
-        }
-          System.out.println("Passeword is wrong:");
+            System.out.println("Passeword is wrong:");
         }
 
     }
